@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables
+.env
+.env.*.local
+
+# Build output
+dist/
+build/
+out/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# OS / Editor / IDE specific
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Coverage reports
+coverage/
+
+# Misc
+*.local
+*.swp
