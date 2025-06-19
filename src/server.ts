@@ -7,7 +7,7 @@ dotenv.config();
 const PORT = process.env.PORT || 8080;
 
 const startServer = async () => {
-    await connectDB(); // ⬅️ Connect to MongoDB
+    await connectDB();
     app.listen(PORT, () => {
         console.log(`🚀 Server running at http://localhost:${PORT}`);
     });
