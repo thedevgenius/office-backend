@@ -8,7 +8,7 @@ export const getProjects = async (req: Request, res: Response) => {
 }
 
 export const createProject = async (req: Request, res: Response) => {
-    const project = new Project({ name: req.body.name });
+    const project = new Project({ name: req.body.name, manager: req.body.manager});
     await project.save();
     res.status(201).json(project);
 };

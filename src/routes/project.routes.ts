@@ -4,7 +4,7 @@ import { getProjects, createProject, getProject, updateProject } from "../contro
 const router = Router();
 
 router.get('/projects', getProjects);
-router.post('/projects/add', createProject);
+router.post('/project/add', createProject);
 router.get('/project/:id', getProject);
 router.put('/project/:id', updateProject);
 

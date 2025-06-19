@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+import bcrypt from 'bcrypt';
 import User from '../models/user.model';
+import Project from "../models/project.model";
 
-const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 export const createUser = async (req: Request, res: Response) => {
@@ -20,4 +21,21 @@ export const createUser = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ message: "Error creating user", error });
     }
+}
+
+export const getUsers = async (req: Request, res: Response) => {
+    const users = await User.find();
+    if (users.length === 0) {
+        res.status(200).json({ message: 'No user found' });
+        return;
+    }
+    res.status(200).json(users);
+}
+
+export const getProjectsByManager = async (req: Request, res: Response) => {
+    const managerId = req.params.manager;
+    const manager = await User.findById(managerId);
+    // console.log(manager);
+    const projects = await Project.find({'manager':managerId});
+    res.status(200).json({manager: manager?.name, projects: projects});
 }
