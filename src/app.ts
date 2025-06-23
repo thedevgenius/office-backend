@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import projectRoutes from './routes/project.routes';
 import authRoutes from './routes/auth.routes';
+import roleRoutes from './routes/role.routes';
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(multer().none());
 
 app.use('/', projectRoutes);
 app.use('/', authRoutes);
+app.use('/', roleRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello this is ready');

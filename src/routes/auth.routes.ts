@@ -4,7 +4,7 @@ import { createUser, getUsers, getProjectsByManager } from "../controllers/auth.
 const router = Router();
 
 router.post("/user/add", createUser);
-router.get("/useres", getUsers);
+router.get("/users", getUsers);
 router.get("/:manager", getProjectsByManager);
 
 export default router;

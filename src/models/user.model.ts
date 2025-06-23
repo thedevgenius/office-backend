@@ -5,7 +5,7 @@ export interface Iuser extends Document {
     email: string;
     phone: string;
     password: string;
-    role: Types.ObjectId;
+    role: Types.ObjectId[];
     manager: Types.ObjectId;
     designation: string;
     gender: string;
@@ -18,15 +18,15 @@ export interface Iuser extends Document {
 const UserSchema: Schema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
-    phone: { type: String, required: true },
+    phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: Schema.Types.ObjectId, ref: "Role", required: true },
-    manager: { type: Schema.Types.ObjectId, ref: "User"},
+    role: [{ type: Schema.Types.ObjectId, ref: "Role" }], // Changed to array for multiple roles
+    manager: { type: Schema.Types.ObjectId, ref: "User" },
     designation: { type: String },
     gender: { type: String },
     dateOfBirth: { type: Date },
-    address: { type: String},
-    joinDate: { type: Date},
-    lastLogin: { type: Date}
+    address: { type: String },
+    joinDate: { type: Date },
+    lastLogin: { type: Date }
 });
 export default mongoose.model<Iuser>("User", UserSchema);

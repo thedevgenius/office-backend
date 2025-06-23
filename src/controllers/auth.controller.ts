@@ -6,7 +6,7 @@ import Project from "../models/project.model";
 const saltRounds = 10;
 
 export const createUser = async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone, role } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -15,7 +15,10 @@ export const createUser = async (req: Request, res: Response) => {
             res.status(400).json({ message: "User already exists" });
             return;
         }
-        const newUser = new User({ name, email, password: hashedPassword });
+
+        const roleArray = Array.isArray(role) ? role : typeof role === 'string' ? [role] : [];
+
+        const newUser = new User({ name, email, phone, password: hashedPassword, joinDate: new Date().toISOString(), role: roleArray });
         await newUser.save();
         res.status(201).json({ message: "User created successfully", user: newUser });
     } catch (error) {
