@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 import Project from "../models/project.model";
 
 const saltRounds = 10;
+const SECRECT_KEY = 'office_login';
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password, phone, role } = req.body;
@@ -41,4 +43,31 @@ export const getProjectsByManager = async (req: Request, res: Response) => {
     // console.log(manager);
     const projects = await Project.find({'manager':managerId});
     res.status(200).json({manager: manager?.name, projects: projects});
+}
+
+export const login = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            res.status(400).json({ 'message': 'User not found' });
+            return;
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            res.status(401).json({ 'message': 'Invalid credentials' });
+            return;
+        }
+        const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, SECRECT_KEY, { expiresIn: '1d' });
+        console.log(token);
+        res.cookie('accessToken', token, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
+        });
+        res.status(200).json({ token });
+    } catch (error) {
+        res.status(500).json(error);
+    }
 }
