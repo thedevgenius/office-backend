@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 import Project from "../models/project.model";
+import authMiddleware from "../middleware/auth.middleware";
 
 const saltRounds = 10;
 const SECRECT_KEY = 'office_login';
@@ -58,16 +59,24 @@ export const login = async (req: Request, res: Response) => {
             res.status(401).json({ 'message': 'Invalid credentials' });
             return;
         }
-        const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, SECRECT_KEY, { expiresIn: '1d' });
-        console.log(token);
+        const token = jwt.sign({ id: user._id, email: user.email }, SECRECT_KEY, { expiresIn: '1d' });
         res.cookie('accessToken', token, {
             httpOnly: true,
-            // secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            sameSite: 'none', // Use 'none' for cross-site cookies
+            secure: true,     // Required for 'none' sameSite, only works over HTTPS
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            path: '/',
+            // domain: 'your-frontend-domain.com' // Uncomment and set if needed
         });
         res.status(200).json({ token });
     } catch (error) {
         res.status(500).json(error);
     }
+}
+
+export const getProtectedData = async (req: Request, res: Response) => {
+    const email = req.user.email;
+    const user = await User.findOne({ email });
+    console.log(user);
+    res.status(200).json({ message: "This is protected data."});
 }

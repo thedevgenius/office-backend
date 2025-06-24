@@ -13,7 +13,7 @@ declare global {
 const SECRECT_KEY = 'office_login';
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.cookies.accesstoken;
+    const token = req.cookies.accessToken;
     if (!token) {
         res.status(401).json('No token provided');
         return;

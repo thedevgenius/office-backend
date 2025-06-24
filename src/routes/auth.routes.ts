@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getUsers, getProjectsByManager , login} from "../controllers/auth.controller";
+import { createUser, getUsers, getProjectsByManager , login, getProtectedData } from "../controllers/auth.controller";
 
 const router = Router();
 
@@ -8,5 +8,6 @@ router.get("/users", getUsers);
 router.get("/:manager", getProjectsByManager);
 
 router.post("/login", login);
+router.post("/protected", getProtectedData);
 
 export default router;
