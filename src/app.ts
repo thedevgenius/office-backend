@@ -8,6 +8,7 @@ import projectRoutes from './routes/project.routes';
 import authRoutes from './routes/auth.routes';
 import roleRoutes from './routes/role.routes';
 import clientRoutes from './routes/client.routes';
+import userRoutes from './routes/user.routes';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/', projectRoutes);
 app.use('/', authRoutes);
 app.use('/', roleRoutes);
 app.use('/', clientRoutes);
+app.use('/', userRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello this is ready');

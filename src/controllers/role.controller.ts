@@ -8,7 +8,16 @@ export const createRole = async (req: Request, res: Response) => {
         const newRole = new Role({ name, permissions: permissionArray });
         await newRole.save();
         res.status(201).json(newRole);
-    } catch (error) {   
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+export const getRoles = async (req: Request, res: Response) => {
+    try {
+        const roles = await Role.find();
+        res.status(200).json(roles);
+    } catch (error) {
         res.status(500).json(error);
     }
 }
