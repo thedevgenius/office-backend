@@ -24,6 +24,10 @@ export interface IProject extends Document {
     status: string;
     techstack: string[];
     credentials: Credential[];
+    leadDeveloper?: Types.ObjectId;
+    assignedTo?: Types.ObjectId;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 const ProjectSchema: Schema = new Schema({
@@ -32,7 +36,11 @@ const ProjectSchema: Schema = new Schema({
     client: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
     status: { type: String, enum: ['Design', 'Development', 'Staging', 'Live'], default: 'Design' },
     techstack: [{ type: String }],
-    credentials: [CredentialSchema]
+    credentials: [CredentialSchema],
+    leadDeveloper: { type: Schema.Types.ObjectId, ref: 'User' },
+    assignedTo: { type: Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
 export default mongoose.model<IProject>('Project', ProjectSchema);

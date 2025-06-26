@@ -6,15 +6,13 @@ import authMiddleware from "../middleware/auth.middleware";
 export const createClient = [
     authMiddleware,
     async (req: Request, res: Response) => {
-        const { name, company } = req.body;
-        const email = req.user?.email;
-        const user = User.findOne({ email });
+        const { name, company, email } = req.body;
         try {
-            const newClient = new Client({ name, company });
-            await newClient.save()
-            res.status(201).json({ 'message': 'New Client added', client: newClient });
+            const newClient = new Client({ name, company, email });
+            await newClient.save();
+            res.status(201).json({ message: "Client created successfully", client: newClient });
         } catch (error) {
-            res.status(500).json(error);
+            res.status(500).json({ message: "Internal server error", error });
         }
     }
 ]

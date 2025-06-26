@@ -6,8 +6,8 @@ export interface Iuser extends Document {
     phone: string;
     password: string;
     designation: string;
-    role: Types.ObjectId[];
-    manager: Types.ObjectId;
+    roles: Types.ObjectId[];
+    reportingManager: Types.ObjectId;
     status: string;
     assignedManager: Types.ObjectId;
     gender: string;
@@ -25,8 +25,8 @@ const UserSchema: Schema = new Schema({
     email: { type: String, required: true, unique: true, lowercase: true, index: true },
     phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: [{ type: Schema.Types.ObjectId, ref: "Role" }],
-    manager: { type: Schema.Types.ObjectId, ref: "User" },
+    roles: [{ type: Schema.Types.ObjectId, ref: "Role" }],
+    reportingManager: { type: Schema.Types.ObjectId, ref: "User" },
     status: { type: String, enum: ['Working', 'Booked', 'Available', 'Absent', 'Assist'], default: 'Working' },
     assignedManager: { type: Schema.Types.ObjectId, ref: "User" },
     designation: { type: String },
@@ -36,7 +36,6 @@ const UserSchema: Schema = new Schema({
     lastQualification: { type: String },
     totalExperience: { type: Number },
     prevCompany: { type: String },
-    
     joinDate: { type: Date },
     lastLogin: { type: Date }
 });
