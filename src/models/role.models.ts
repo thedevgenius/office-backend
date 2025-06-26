@@ -6,7 +6,7 @@ export interface IRole extends Document {
 }
 
 const RoleSchema: Schema = new Schema({
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     permissions: { type: [String], default: [] }
 });
 

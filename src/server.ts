@@ -15,4 +15,3 @@ const startServer = async () => {
 
 startServer();
 
-// mongodb+srv://thedevgenius83:JFOF6kF9SuxG9Yyw@office.ix4ndch.mongodb.net/myoffice

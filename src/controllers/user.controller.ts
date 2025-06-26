@@ -11,7 +11,7 @@ export const createUser = [
     // checkPermission("userAdd"),
     async (req: Request, res: Response) => {
         try {
-            const { name = "", email = "", password = "", phone = "", role = [], designation, gender, dateOfBirth, address, lastQualification, totalExperience, prevCompany} = req.body;
+            const { name = "", email = "", password = "", phone = "", role = [], designation, gender, dateOfBirth, address, lastQualification, totalExperience, prevCompany } = req.body;
 
             if (!name || !email || !password) {
                 res.status(400).json({ message: "Name, email, and password are required" });
@@ -29,8 +29,8 @@ export const createUser = [
             const roleArray: string[] = Array.isArray(role)
                 ? role
                 : typeof role === "string"
-                ? [role]
-                : [];
+                    ? [role]
+                    : [];
 
             const newUser = new User({
                 name,
@@ -73,12 +73,33 @@ export const createUser = [
 ];
 
 export const getUsers = async (req: Request, res: Response) => {
-    const users = await User.find();
-    if (users.length === 0) {
-        res.status(200).json({ message: 'No user found' });
-        return;
+    try {
+        const role = req.query.role;
+        let users: any[] = [];
+        if (role) {
+            const roleDoc = await Role.findOne({ name: role });
+            if (!roleDoc) {
+                users = [];
+            } else {
+                users = await User.find({ role: roleDoc._id })
+                    .select('name email role')
+                    .populate({ path: 'role', select: 'name' });
+            }
+        } else {
+            users = await User.find()
+                .select('name email role status')
+                .populate({ path: 'role', select: 'name' });
+        }
+
+        if (!users || users.length === 0) {
+            res.status(200).json({ message: 'No user found' });
+            return;
+        }
+        res.status(200).json(users);
+    } catch (error: any) {
+        console.error("Get users error:", error);
+        res.status(500).json({ message: "Error fetching users", error: error.message });
     }
-    res.status(200).json(users);
 }
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -96,3 +117,31 @@ export const updateUser = async (req: Request, res: Response) => {
     res.status(200).json(user)
 
 }
+
+export const bookUser = [
+    authMiddleware,
+    async (req: Request, res: Response) => {
+        const manager = req.user;
+        const userId = req.body.user;
+        if (!manager || !manager.id) {
+            res.status(400).json({ message: "Manager information is missing or invalid" });
+            return;
+        }
+        try {
+            console.log(userId);
+            const user = await User.findByIdAndUpdate(userId, {
+                'assignedManager': manager.id,
+                'status': 'Booked'
+            }, { new: true, runValidators: true });
+            if (!user) {
+                res.status(404).json({ message: "User not found" });
+                return;
+            }
+            console.log(user);
+            res.status(200).json({ 'message': 'Success' });
+        } catch (error: any) {
+            console.error("Book user error:", error);
+            res.status(500).json({ message: "Error booking user", error: error.message });
+        }
+    }
+]

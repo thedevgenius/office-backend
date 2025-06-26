@@ -21,3 +21,34 @@ export const getRoles = async (req: Request, res: Response) => {
         res.status(500).json(error);
     }
 }
+
+export const updateRole = async (req: Request, res: Response) => {
+    const roleId = req.params.roleId;
+    const updateRole = req.body;
+
+    const updatedRole = await Role.findByIdAndUpdate(roleId, updateRole, {
+        new: true,
+        runValidators: true
+    });
+
+    if (!updateRole) {
+        res.status(404).json({ 'message': 'Role not found' });
+        return;
+    }
+
+    res.status(200).json({ 'message': 'Role updated successfully', 'role': updatedRole });
+
+}
+
+export const deleteRole = async (req: Request, res: Response) => {
+    const roleId = req.params.roleId;
+
+    const role = await Role.findByIdAndDelete(roleId);
+
+    if (!role) {
+        res.status(404).json({ 'message': 'Role not found' });
+        return;
+    }
+
+    res.status(200).json({ 'message': 'Role deleted successfully'});
+}

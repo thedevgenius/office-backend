@@ -3,7 +3,7 @@ import {getProjectsByManager , login, getProtectedData } from "../controllers/au
 
 const router = Router();
 
-router.get("/:manager", getProjectsByManager);
+// router.get("/:manager", getProjectsByManager);
 
 router.post("/login", login);
 router.post("/protected", getProtectedData);

@@ -8,6 +8,8 @@ export interface Iuser extends Document {
     designation: string;
     role: Types.ObjectId[];
     manager: Types.ObjectId;
+    status: string;
+    assignedManager: Types.ObjectId;
     gender: string;
     dateOfBirth: Date;
     address: string;
@@ -19,12 +21,14 @@ export interface Iuser extends Document {
 }
 
 const UserSchema: Schema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
+    name: { type: String, required: true, index: true },
+    email: { type: String, required: true, unique: true, lowercase: true, index: true },
     phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: [{ type: Schema.Types.ObjectId, ref: "Role" }],
     manager: { type: Schema.Types.ObjectId, ref: "User" },
+    status: { type: String, enum: ['Working', 'Booked', 'Available', 'Absent', 'Assist'], default: 'Working' },
+    assignedManager: { type: Schema.Types.ObjectId, ref: "User" },
     designation: { type: String },
     gender: { type: String, enum: ['Male', 'Female', 'Other'] },
     dateOfBirth: { type: Date },
@@ -32,7 +36,9 @@ const UserSchema: Schema = new Schema({
     lastQualification: { type: String },
     totalExperience: { type: Number },
     prevCompany: { type: String },
+    
     joinDate: { type: Date },
     lastLogin: { type: Date }
 });
+
 export default mongoose.model<Iuser>("User", UserSchema);
