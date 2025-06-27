@@ -12,11 +12,15 @@ export const createProject = [
     authMiddleware,
     async (req: Request, res: Response) => {
         const userId = req.user?.id;
-        const { name, client, status, techstack } = req.body;
-        const techArray = Array.isArray(techstack) ? techstack : typeof techstack === 'string' ? [techstack] : [];
-        const project = new Project({ name, manager: userId, client, status, techstack: techArray });
-        await project.save();
-        res.status(201).json(project);
+        const { name, client, status, techstack, leadDeveloper, assignedTo } = req.body;
+        try {
+            const techArray = Array.isArray(techstack) ? techstack : typeof techstack === 'string' ? [techstack] : [];
+            const project = new Project({ name, manager: userId, client, status, techstack: techArray, leadDeveloper, assignedTo });
+            await project.save();
+            res.status(201).json(project);
+        } catch (error) {
+            res.status(505).json(error);
+        }
     }
 ]
 
